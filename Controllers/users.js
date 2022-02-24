@@ -15,6 +15,9 @@ async function getUsers(req, res){
 }
 async function readFile(req, res){
     // console.log('res',req.files.file);
+    if(!req.files){
+        return res.status(200).send({ msg: "file is not found" })
+    }
     const myFile = req.files.file;
     // const content = fs.readFileSync(myFile);
     const fecha = new Date();
@@ -42,6 +45,7 @@ async function readFile(req, res){
     let uploadFile = [];
     dataFile.forEach(element => {
         uploadFile.push({
+            userId : element[0],
             userName : element[1],
             date : element[2],
             punchIn : element[3],
@@ -50,9 +54,10 @@ async function readFile(req, res){
     });
     console.log(uploadFile);
     await User.bulkCreate(uploadFile);
+    const allUsers = await User.findAll().catch(console.error);
     return res.status(200).send({
         error: null,
-        response: 'content',
+        response: allUsers,
     })
 }
 async function deleteUser(req, res){
@@ -78,11 +83,31 @@ async function createUser(req, res){
         response: logUser,
     })
 }
+async function EditUser(req, res){
+    const data = req.body;
+    await User.update({
+        userId: data.userId,
+        userName: data.userName,
+        date: data.date,
+        punchIn: data.punchIn,
+        punchOut: data.punchOut
+    }, {
+        where: {
+            id: data.id,
+        }
+    }).catch(console.error);
+    const alluser = await User.findAll().catch(console.error);
+    return res.status(200).send({
+        error: null,
+        response: alluser,
+    })
+}
 module.exports = {
     getUsers,
     readFile,
     deleteUser,
-    createUser
+    createUser,
+    EditUser
 };
 /*module.exports = {
  create(req, res) {

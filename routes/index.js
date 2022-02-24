@@ -15,6 +15,7 @@ router.get('/getUsers'  , require('../Controllers/users').getUsers);
 router.post('/fileUpload'  , require('../Controllers/users').readFile);
 router.post('/deleteUser'  , require('../Controllers/users').deleteUser);
 router.post('/createUser'  , require('../Controllers/users').createUser);
+router.post('/EditUser'  , require('../Controllers/users').EditUser);
 
 // router.get('/getUsers', (req, res) => {
 //     res.json({
